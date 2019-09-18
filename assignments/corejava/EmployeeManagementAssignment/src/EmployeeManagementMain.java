@@ -1,3 +1,11 @@
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,7 +23,8 @@ public class EmployeeManagementMain {
 		System.out.println("3:veiw all employee");
 		System.out.println("4:update employee");
 		System.out.println("5:delete employee");
-		
+		System.out.println("6:import");
+		System.out.println("7:export");
 		
 		for(int x=0;x<10;x++) {
 			Scanner sc=new Scanner(System.in);
@@ -51,10 +60,72 @@ public class EmployeeManagementMain {
 //				}
 //			}
 			employee.add(new  EmployeeService(i,a,n,d,c));
+			
+//			 try{
+//	                FileOutputStream fos= new FileOutputStream("C:\\Users\\ArjoitaBanerjee\\Desktop\\emp.txt");
+//	                ObjectOutputStream oos= new ObjectOutputStream(fos);
+//	                oos.writeObject(employee);
+//	                oos.close();
+//	                fos.close();
+//	            }catch(IOException ioe){
+//	                ioe.printStackTrace();
+//	            }
+			
 			System.out.println("Enter next operation");
 			
 //			System.out.println(employee);
 		}
+		
+		if(k==6) {
+			try {
+			FileInputStream fstream = new FileInputStream("C:\\Users\\ArjoitaBanerjee\\Desktop\\emp.txt");
+			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+			String strLine;
+
+			//Read File Line By Line
+			while ((strLine = br.readLine()) != null)   {
+			  // Print the content on the console
+				String[] data=strLine.split(",");
+				employee.add(new EmployeeService(Integer.parseInt(data[0]),Integer.parseInt(data[1]),data[2],data[3],data[4]));
+				System.out.println(data[1]);
+				
+			}
+			}
+			catch(IOException ioe){
+                ioe.printStackTrace();
+            }
+			
+		}
+		
+		if(k==7) {
+			
+			 try{    
+		           FileWriter fw=new FileWriter("C:\\Users\\ArjoitaBanerjee\\Desktop\\emp.txt");
+		           for(int j=0;j<employee.size();j++) {
+		        	   String s1=Integer.toString(employee.get(j).getEmpId());
+		        	   String s2=Integer.toString(employee.get(j).getAge());
+		        	   String s3=employee.get(j).getName();
+		        	   String s4=employee.get(j).getDept();
+		        	   String s5=employee.get(j).getCountry();
+		        	   
+		        	   String d=s1+","+s2+","+s3+","+s4+","+s5;
+		        	   
+		        	   fw.write(d);    
+		           }
+		           
+		           
+		           fw.close();    
+		          }catch(Exception e){System.out.println(e);}    
+		             
+		     }  
+		
+		
+		
+		
+		
+		
+		
 		
 		if(k==0) {
 			System.out.println(employee);
@@ -73,6 +144,8 @@ public class EmployeeManagementMain {
 				}
 			System.out.println("Enter next operation");
 		}
+		
+		
 		
 		if(k==4) {
 			
@@ -98,6 +171,8 @@ public class EmployeeManagementMain {
 			System.out.println(employee);
 			System.out.println("Enter next operation");
 		}
+		
+		
 		if(k==5) {
 			System.out.println("Enter id");
 			Scanner sc1=new Scanner(System.in);
@@ -124,7 +199,7 @@ public class EmployeeManagementMain {
  }
 }
 
-class EmployeeService{
+class EmployeeService implements Serializable{
 	int empId;
 	int age;
 	String name;
